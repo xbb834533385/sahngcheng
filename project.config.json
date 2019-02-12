@@ -1,15 +1,16 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": false,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
-	"appid": "wxf38fa8abade84a24",
+	"appid": "wx9433d5eb2a2b7ea9",
 	"projectname": "youGo2019-1-28",
 	"condition": {
 		"search": {
@@ -29,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 2,
+			"current": 3,
 			"list": [
 				{
 					"id": -1,
@@ -46,7 +47,14 @@
 				{
 					"id": -1,
 					"name": "去搜索",
-					"pathName": "pages/search/main"
+					"pathName": "pages/search/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "取详情",
+					"pathName": "pages/detail/main",
+					"query": "goods_id=893"
 				}
 			]
 		}

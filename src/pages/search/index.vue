@@ -22,18 +22,23 @@
       </div>
       <div class="result-box" v-if="results.length!=0">
         <div class="filter-box">
-          <div class="filter active">综合</div>
-          <div class="filter">销量</div>
-          <div class="filter">价格
+          <div class="filter" :class="{active:orderIndex==0}" @click="orderIndex=0">综合</div>
+          <div class="filter" :class="{active:orderIndex==1}" @click="orderIndex=1">销量</div>
+          <div class="filter" :class="{active:orderIndex==2}" @click="orderIndex=2;isUp=!isUp">价格
             <div class="arrow-box">
-              <span>▲</span>
-              <span>▼</span>
+              <span :class="{active:isUp}">▲</span>
+              <span :class="{active:!isUp}">▼</span>
             </div>
           </div>
         </div>
         <!-- 商品盒子 -->
         <div class="goods-box">
-          <div class="item" v-for="(item, index) in results" :key="item.goods_id">
+          <div
+            class="item"
+            v-for="(item, index) in comResults"
+            :key="item.goods_id"
+            @click="toDetail(item.goods_id)"
+          >
             <div class="left">
               <img :src="item.goods_small_logo" alt>
             </div>
@@ -62,8 +67,39 @@ export default {
       // 搜索数组
       searchList: [],
       // 搜索结果数组
-      results: []
+      results: [],
+      // 记录排序条件索引0,1,2
+      orderIndex: 0,
+      // 价格升降序
+      isUp: true
     };
+  },
+  computed: {
+    comResults(){
+      switch (this.orderIndex) {
+        case 0:
+          return this.results
+          break;
+        case 1:
+          let newArr = JSON.parse(JSON.stringify(this.results));
+          return newArr.sort((a,b)=>{
+            return a.goods_id - b.goods_id;
+          })
+          break;
+        case 2:
+          newArr = JSON.parse(JSON.stringify(this.results));
+          return newArr.sort((a,b)=>{
+            if(this.isUp){
+              return a.goods_price - b.goods_price;
+            }else{
+              return b.goods_price - a.goods_price;
+            }
+          })
+          break;
+        default:
+          break;
+      }
+    }
   },
   methods: {
     // 查询数据
@@ -116,6 +152,11 @@ export default {
       this.inputValue = value;
       // 查询数据
       this.searchData();
+    },
+    // 去详情
+    toDetail(goods_id){
+      // 代码跳转
+      wx.navigateTo({ url: '/pages/detail/main?goods_id='+goods_id });
     }
   },
   // created 只要保证data有了即可
@@ -223,6 +264,13 @@ $uRed: #ff2d4a;
       font-size: 30rpx;
       &.active {
         color: $uRed;
+        .arrow-box {
+          span {
+            &.active {
+              color: $uRed;
+            }
+          }
+        }
       }
       &:last-child {
         display: flex;
@@ -232,6 +280,7 @@ $uRed: #ff2d4a;
           span {
             display: block;
             transform: scaleY(0.6);
+            color: black;
           }
         }
       }
