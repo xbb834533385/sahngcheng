@@ -61,7 +61,7 @@
         <span class="iconfont icon-gouwuche" @click="toCart"></span>
         购物车
       </div>
-      <button>加入购物车</button>
+      <button @click="add2cart">加入购物车</button>
       <button>立即购买</button>
     </div>
   </div>
@@ -125,6 +125,47 @@ export default {
     // 去购物车 因为购物车是用tabbar管理的页面 所以不能用navigateTo跳转
     toCart(){
       wx.switchTab({url:"/pages/cart/main"})
+    },
+    // 添加到购物车
+    add2cart(){
+      wx.getStorage({
+        key: 'cart',
+        // 判断是否存在缓存
+        success: (res) => {
+          // console.log(res.data)
+          // 存在这个商品就直接累加
+          if(res.data[this.goodsDetail.goods_id]){
+            res.data[this.goodsDetail.goods_id]++;
+          }else{
+            // 没有这个商品
+            res.data[this.goodsDetail.goods_id] = 1;
+          }
+          // 重新添加到缓存中
+          wx.setStorage({
+            key: 'cart',
+            data: res.data
+          });
+        },
+        fail: () => {
+        // 不存在缓存就创建一个缓存
+          let cartData = {};
+          cartData[this.goodsDetail.goods_id] = 1;
+          // 重新保存到缓存中
+          wx.setStorage({
+            key: 'cart',
+            data: cartData
+          });
+        },
+        complete: () => {
+          wx.showToast({
+            title: '添加成功', //提示的内容,
+            icon: 'success', //图标,
+            duration: 2000, //延迟时间,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+            success: res => {}
+          });
+        }
+      })
     }
   }
 };
