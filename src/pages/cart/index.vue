@@ -68,7 +68,7 @@
             </div>
             <div class="bottom">商家包邮</div>
           </div>
-          <button>结算({{totalNum}})</button>
+          <button :class="{disabled:totalNum==0}" @click="createOrder">结算({{totalNum}})</button>
         </div>
       </div>
     </div>
@@ -120,7 +120,31 @@ export default {
     checkAll(){
       // 把所有商品的选中状态 变得和自己一样
       this.isCheckAll = !this.isCheckAll;
-    } 
+    },
+    // 创建订单
+    async createOrder(){
+      // 如果购物车没有东西就不能点
+      if(this.totalNum !=0){
+        // // 首先判断登录状态
+        let token = wx.setStorageSync('token');
+        // console.log(token);
+        if(token){
+
+        }else{
+          wx.showToast({
+          title: '请先登录', //提示的内容,
+          icon: 'warning', //图标,
+          duration: 2000, //延迟时间,
+          mask: true, //显示透明蒙层，防止触摸穿透,
+          success: res => {
+            wx.switchTab({ url: "/pages/mine/main" });
+          }
+        });
+        }
+      }else{
+        
+      }
+    }
   },
   // 计算属性
   computed: {
